@@ -50,4 +50,4 @@ export {
    to24HourFormat,
    toDateInputFormat,
    formatRangeLabel
-}
+};
