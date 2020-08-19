@@ -5,9 +5,9 @@ const center = {
 };
 
 const hereCredentials = {
-   id: '1ciAJ1kfBJt3vZIA37qR',
-   code: '',
-   apikey: '5tcVJs5GBl4L3_OQe00J1GqIYNDU-H7kjZ585zwk12Q'
+   id: process.env.HERE_APP_ID,
+   code: ``,
+   apikey: process.env.HERE_API_KEY,
 };
 
 export { center, hereCredentials };
