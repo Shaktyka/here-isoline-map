@@ -3,9 +3,41 @@ import { center, hereCredentials } from './config.js';
 import { isolineMaxRange, requestIsolineShape } from './here.js';
 import HourFilter from './hour-filter.js';
 
+
+//Manage initial state
+$('#slider-val').innerText = formatRangeLabel($('#range').value, 'time');
+$('#date-value').value = toDateInputFormat(new Date());
+
+
+//Tab control for sidebar
+const tabs = $$('.tab');
+tabs.forEach(t => t.onclick = tabify);
+
+function tabify(evt) {
+   tabs.forEach(t => t.classList.remove('tab-active'));
+   if (evt.target.id === 'tab-1') {
+      $('.tab-bar').style.transform = 'translateX(0)';
+      evt.target.classList.add('tab-active');
+      $('#content-group-1').style.transform = 'translateX(0)';
+      $('#content-group-2').style.transform = 'translateX(100%)';
+   } else {
+      $('.tab-bar').style.transform = 'translateX(100%)';
+      evt.target.classList.add('tab-active');
+      $('#content-group-1').style.transform = 'translateX(-100%)';
+      $('#content-group-2').style.transform = 'translateX(0)';
+   }
+};
+
+
+//Add event listeners
+$$('.isoline-controls').forEach(c => c.onchange = () => calculateIsoline());
+$$('.view-controls').forEach(c => c.onchange = () => calculateView());
+
+
 //Height calculations
 const height = $('#content-group-1').clientHeight || $('#content-group-1').offsetHeight;
 $('.content').style.height = height + 'px';
+
 
 // Initialize HERE Map
 const platform = new H.service.Platform({ apikey: hereCredentials.apikey });
@@ -23,6 +55,7 @@ const router = platform.getRoutingService();
 const geocoder = platform.getGeocodingService();
 
 window.addEventListener('resize', () => map.getViewPort().resize());
+
 
 // Marker
 let polygon;
@@ -47,8 +80,10 @@ map.addEventListener('drag', evt => {
     }
 }, false);
 
+
 //Initialize the HourFilter
 const hourFilter = new HourFilter();
+
 
 // Calculate isoline
 async function calculateIsoline() {
