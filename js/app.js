@@ -3,7 +3,9 @@ import { center, hereCredentials } from './config.js';
 import { isolineMaxRange, requestIsolineShape } from './here.js';
 import HourFilter from './hour-filter.js';
 import MapRotation from './map-rotation.js';
+import Search from './search.js';
 
+new Search('Berlin, DEU');
 
 //Manage initial state
 $('#slider-val').innerText = formatRangeLabel($('#range').value, 'time');
@@ -186,4 +188,4 @@ function calculateView() {
    }
 };
 
-export { router, geocoder }
+export { calculateIsoline, marker, router, geocoder };
