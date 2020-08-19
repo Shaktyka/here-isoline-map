@@ -2,6 +2,7 @@ import { $, $$, to24HourFormat, formatRangeLabel, toDateInputFormat } from './he
 import { center, hereCredentials } from './config.js';
 import { isolineMaxRange, requestIsolineShape } from './here.js';
 import HourFilter from './hour-filter.js';
+import MapRotation from './map-rotation.js';
 
 
 //Manage initial state
@@ -25,6 +26,23 @@ function tabify(evt) {
       evt.target.classList.add('tab-active');
       $('#content-group-1').style.transform = 'translateX(-100%)';
       $('#content-group-2').style.transform = 'translateX(0)';
+   }
+};
+
+
+//Theme control
+const themeTiles = $$('.theme-tile');
+themeTiles.forEach(t => t.onclick = tabifyThemes);
+
+function tabifyThemes(evt) {
+   themeTiles.forEach(t => t.classList.remove('theme-tile-active'));
+   evt.target.classList.add('theme-tile-active');
+   if (evt.target.id === 'day') {
+      const style = new H.map.Style('https://js.api.here.com/v3/3.1/styles/omv/normal.day.yaml')
+      provider.setStyle(style);
+   } else {
+      const style = new H.map.Style('./resources/night.yaml');
+      provider.setStyle(style);
    }
 };
 
@@ -152,5 +170,20 @@ async function calculateIsoline() {
 };
 
 calculateIsoline();
+
+// Map rotation
+const rotation = new MapRotation(map);
+
+function calculateView() {
+   const options = {
+      theme: $('#day').checked ? 'day' : 'night',
+      static: $('#static').checked
+   }
+   if (options.static) {
+      rotation.stop();
+   } else {
+      rotation.start();
+   }
+};
 
 export { router, geocoder }
